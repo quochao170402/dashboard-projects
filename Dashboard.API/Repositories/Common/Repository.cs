@@ -17,8 +17,7 @@ public class Repository<T> : IRepository<T> where T : Entity
 
     public async Task<T?> GetById(Guid id)
     {
-        return null;
-        // return await _dbSet.FindAsync(id);
+        return await _dbSet.FindAsync(id);
     }
 
     public async Task<List<T>> Get()
