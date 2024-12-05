@@ -33,7 +33,7 @@ public class Project : Entity, IAggregateRoot
         {
             case ProjectStatus.NotStarted:
                 if (Status == ProjectStatus.Completed)
-                    throw new ArgumentException("Project status cannot be completed.");
+                    throw new ArgumentException("Cannot re-start the completed project.");
                 break;
             case ProjectStatus.InProgress:
                 break;
