@@ -1,3 +1,5 @@
+using System.Net;
+using Dashboard.API.Controllers.Base;
 using Dashboard.API.Payload;
 using Dashboard.Application.Features.Projects.AddProject;
 using Dashboard.Application.Features.Projects.DeleteProject;
@@ -7,6 +9,7 @@ using Dashboard.Application.Features.Projects.UpdateProject;
 using Dashboard.Application.Features.Projects.UpdateProjectStatus;
 using Dashboard.BuildingBlock.DTO;
 using Dashboard.BuildingBlock.Helpers;
+using Dashboard.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,20 +17,14 @@ namespace Dashboard.API.Controllers;
 
 [Route("api/[controller]/[action]")]
 [ApiController]
-public class ProjectController(IMediator mediator) : ControllerBase
+public class ProjectController(IMediator mediator) : BaseAPIController
 {
     [HttpGet("{projectId:guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid projectId,
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(new GetProjectByIdRequest { Id = projectId }, cancellationToken);
-        return StatusCode(200, new Response
-        {
-            Success = true,
-            StatusCode = 200,
-            Messages = null,
-            Data = response
-        });
+        return OkResponse(response);
     }
 
     [HttpGet]
@@ -35,16 +32,10 @@ public class ProjectController(IMediator mediator) : ControllerBase
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(request, cancellationToken);
-        return StatusCode(200, new Response
+        return OkResponse(new
         {
-            Success = true,
-            StatusCode = 200,
-            Messages = null,
-            Data = new
-            {
-                Data = response.projects,
-                Count = response.count
-            }
+            Data = response.projects,
+            Count = response.count
         });
     }
 
@@ -53,13 +44,7 @@ public class ProjectController(IMediator mediator) : ControllerBase
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(request, cancellationToken);
-        return StatusCode(201, new Response
-        {
-            Success = true,
-            StatusCode = 201,
-            Messages = null,
-            Data = response
-        });
+        return OkResponse(response, (int)HttpStatusCode.Created);
     }
 
     [HttpPut("{projectId:guid}")]
@@ -76,31 +61,20 @@ public class ProjectController(IMediator mediator) : ControllerBase
             Url = request.Url
         }, cancellationToken);
 
-        return StatusCode(200, new Response
-        {
-            Success = true,
-            StatusCode = 200,
-            Messages = null,
-            Data = response
-        });
+        return OkResponse(response);
     }
 
-    [HttpPatch("{projectId:guid}/{status:int}")]
-    public async Task<IActionResult> UpdateStatus([FromRoute] Guid projectId, [FromRoute] int status,
+    [HttpPatch("{projectId:guid}")]
+    public async Task<IActionResult> UpdateStatus([FromRoute] Guid projectId, [FromBody] UpdateProjectStatusRequest request,
         CancellationToken cancellationToken)
     {
-        var response = await mediator.Send(new UpdateProjectStatusRequest
-        {
-            Id = projectId,
-            Status = status.CastToProjectStatus()
-        }, cancellationToken);
-        return StatusCode(200, new Response
-        {
-            Success = true,
-            StatusCode = 200,
-            Messages = null,
-            Data = response
-        });
+        if (!Enum.IsDefined(typeof(ProjectStatus), request.Status))
+            return ErrorResponse("Status not valid", (int)HttpStatusCode.BadRequest);
+        
+        request.Id = projectId;
+        var response = await mediator.Send(request, cancellationToken);
+        
+        return OkResponse(response);
     }
 
     [HttpDelete("{projectId:guid}")]
@@ -111,12 +85,6 @@ public class ProjectController(IMediator mediator) : ControllerBase
         {
             Id = projectId
         }, cancellationToken);
-        return StatusCode(200, new Response
-        {
-            Success = true,
-            StatusCode = 200,
-            Messages = null,
-            Data = response
-        });
+        return OkResponse(response);
     }
 }
