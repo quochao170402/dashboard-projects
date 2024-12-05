@@ -1,9 +1,15 @@
-using Dashboard.API.Extensions;
+using Dashboard.API.Middlewares;
+using Dashboard.Application.Extensions;
+using Dashboard.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddContext();
-builder.Services.AddRepositories();
+#region Add dependencies
+
+builder.Services.AddDataAccess();
+builder.Services.AddFeatures();
+
+#endregion
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -18,6 +24,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.MapControllers();
 

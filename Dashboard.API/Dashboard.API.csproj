@@ -15,11 +15,13 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Enums\"/>
+        <ProjectReference Include="..\Dashboard.Application\Dashboard.Application.csproj"/>
+        <ProjectReference Include="..\Dashboard.Infrastructure\Dashboard.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>

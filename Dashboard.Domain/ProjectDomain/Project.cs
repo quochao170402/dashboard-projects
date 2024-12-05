@@ -24,8 +24,8 @@ public class Project : Entity, IAggregateRoot
     public string Description { get; private set; } = string.Empty;
     public ProjectStatus Status { get; private set; } = ProjectStatus.NotStarted;
     public string Key { get; private set; }
-    public string LeaderId { get; private set; } = string.Empty;
-    public string Url { get; private set; } = string.Empty;
+    public Guid LeaderId { get; private set; } = Guid.Empty;
+    public string Url { get; set; } = string.Empty;
 
     public void UpdateStatus(ProjectStatus status)
     {
@@ -46,7 +46,7 @@ public class Project : Entity, IAggregateRoot
         Status = status;
     }
 
-    public void AssignLeader(string leaderId)
+    public void AssignLeader(Guid leaderId)
     {
         LeaderId = leaderId;
     }
@@ -54,5 +54,16 @@ public class Project : Entity, IAggregateRoot
     public void SetUrl(string url)
     {
         Url = url;
+    }
+
+    public void Update(Project entity)
+    {
+        Name = entity.Name;
+        Description = entity.Description;
+        StartDate = entity.StartDate;
+        EndDate = entity.EndDate;
+        Status = entity.Status;
+        Url = entity.Url;
+        LeaderId = entity.LeaderId;
     }
 }
