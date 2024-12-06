@@ -4,7 +4,7 @@ using Dashboard.BuildingBlock.Repository;
 using Dashboard.Domain.ProjectDomain;
 using MediatR;
 
-namespace Dashboard.Application.Features.Projects.GetProductById;
+namespace Dashboard.Application.Features.Projects.GetProjectById;
 
 public class GetProjectByIdQuery(IRepository<Project> repository)
     : IRequestHandler<GetProjectByIdRequest, ProjectResponse>

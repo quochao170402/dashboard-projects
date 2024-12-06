@@ -1,23 +1,23 @@
 using System.Net;
+using Asp.Versioning;
 using Dashboard.API.Controllers.Base;
 using Dashboard.API.Payload;
 using Dashboard.Application.Features.Projects.AddProject;
 using Dashboard.Application.Features.Projects.DeleteProject;
 using Dashboard.Application.Features.Projects.FilterProject;
-using Dashboard.Application.Features.Projects.GetProductById;
+using Dashboard.Application.Features.Projects.GetProjectById;
 using Dashboard.Application.Features.Projects.UpdateProject;
 using Dashboard.Application.Features.Projects.UpdateProjectStatus;
-using Dashboard.BuildingBlock.DTO;
-using Dashboard.BuildingBlock.Helpers;
 using Dashboard.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dashboard.API.Controllers;
+namespace Dashboard.API.Controllers.Version1;
 
-[Route("api/[controller]/[action]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]/[action]")]
 [ApiController]
-public class ProjectController(IMediator mediator) : BaseAPIController
+public class ProjectController(IMediator mediator) : BaseApiController
 {
     [HttpGet("{projectId:guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid projectId,
@@ -65,15 +65,16 @@ public class ProjectController(IMediator mediator) : BaseAPIController
     }
 
     [HttpPatch("{projectId:guid}")]
-    public async Task<IActionResult> UpdateStatus([FromRoute] Guid projectId, [FromBody] UpdateProjectStatusRequest request,
+    public async Task<IActionResult> UpdateStatus([FromRoute] Guid projectId,
+        [FromBody] UpdateProjectStatusRequest request,
         CancellationToken cancellationToken)
     {
         if (!Enum.IsDefined(typeof(ProjectStatus), request.Status))
             return ErrorResponse("Status not valid", (int)HttpStatusCode.BadRequest);
-        
+
         request.Id = projectId;
         var response = await mediator.Send(request, cancellationToken);
-        
+
         return OkResponse(response);
     }
 
