@@ -1,7 +1,7 @@
 using Dashboard.Application.Features.Projects.Common;
 using MediatR;
 
-namespace Dashboard.Application.Features.Projects.GetProductById;
+namespace Dashboard.Application.Features.Projects.GetProjectById;
 
 public class GetProjectByIdRequest : IRequest<ProjectResponse>
 {
