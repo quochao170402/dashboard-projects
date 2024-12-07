@@ -35,7 +35,8 @@ public class ProjectRepository : Repository<Project>, IProjectRepository
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(keyword))
-            query = query.Where(x => x.Name.Equals(keyword, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(x => x.Name.Equals(keyword, StringComparison.CurrentCultureIgnoreCase)
+                                     || x.Key.Equals(keyword, StringComparison.CurrentCultureIgnoreCase));
         var count = await query.CountAsync(cancellationToken);
 
         query = query.Skip(pageSize * (pageIndex - 1))
