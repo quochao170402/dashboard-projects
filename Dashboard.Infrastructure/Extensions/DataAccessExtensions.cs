@@ -1,5 +1,6 @@
 using Dashboard.BuildingBlock.Repository;
 using Dashboard.Domain.ProjectDomain;
+using Dashboard.Domain.TaskDomain;
 using Dashboard.Infrastructure.DataAccess;
 using Dashboard.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,7 @@ public static class DataAccessExtensions
     {
         services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
         services.AddTransient<IProjectRepository, ProjectRepository>();
+        services.AddTransient<ITaskRepository, TaskRepository>();
 
         return services;
     }
