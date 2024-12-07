@@ -12,7 +12,10 @@ public class AddProjectCommand(IProjectRepository projectRepository, IRepository
         await Validate(request, cancellationToken);
 
         var isSuccess = await repository.AddAsync(
-            new Project(request.Name, request.Key, request.Description, request.StartDate, request.EndDate),
+            new Project(request.Name, request.Key, request.Description, request.StartDate, request.EndDate)
+            {
+                Url = request.Url
+            },
             cancellationToken);
 
         return isSuccess;
