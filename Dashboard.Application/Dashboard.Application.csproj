@@ -7,17 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MediatR" Version="12.4.1"/>
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0"/>
+        <PackageReference Include="AutoMapper" Version="12.0.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+        <PackageReference Include="MediatR" Version="12.4.1" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Dashboard.BuildingBlock\Dashboard.BuildingBlock.csproj"/>
-        <ProjectReference Include="..\Dashboard.Domain\Dashboard.Domain.csproj"/>
+        <ProjectReference Include="..\Dashboard.BuildingBlock\Dashboard.BuildingBlock.csproj" />
+        <ProjectReference Include="..\Dashboard.Domain\Dashboard.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Payload\"/>
+        <Folder Include="Payload\" />
     </ItemGroup>
 
 </Project>

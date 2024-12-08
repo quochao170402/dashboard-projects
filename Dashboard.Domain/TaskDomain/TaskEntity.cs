@@ -8,12 +8,14 @@ public class TaskEntity : Entity, IAggregateRoot
 {
     public string Summary { get; set; }
     public string Key { get; set; }
-    public string Description { get; set; }
-    public string AssigneeId { get; set; }
-    public string ReporterId { get; set; }
-    public int Priority { get; set; }
-    public DateTime DueDate { get; set; }
-    public TaskStatus Status { get; set; }
-    public TaskType Type { get; set; }
+    public string Description { get; set; } = string.Empty;
+    public string AssigneeId { get; set; } = string.Empty;
+    public string ReporterId { get; set; } = string.Empty;
+    public int Estimate { get; set; } = 0;
+    public int Priority { get; set; } = 0;
+    public DateTime StartDate { get; set; } = DateTime.MinValue;
+    public DateTime DueDate { get; set; } = DateTime.MinValue;
+    public TaskStatus Status { get; set; } = TaskStatus.TODO;
+    public TaskType Type { get; set; } = TaskType.Task;
     public Guid ProjectId { get; set; }
 }

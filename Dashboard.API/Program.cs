@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDataAccess();
 builder.Services.AddFeatures();
+builder.Services.AddMapperProfile();
 
 #endregion
 

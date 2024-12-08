@@ -29,6 +29,7 @@ public class GlobalExceptionHandlerMiddleware(
         {
             InvalidProjectException => (int)HttpStatusCode.BadRequest,
             EntityNotFoundException => (int)HttpStatusCode.NotFound,
+            BusinessLogicException => (int)HttpStatusCode.UnprocessableEntity,
             _ => (int)HttpStatusCode.BadRequest
         };
 
