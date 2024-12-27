@@ -12,8 +12,8 @@ using Projects.Context;
 namespace Projects.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20241225070431_Init")]
-    partial class Init
+    [Migration("20241227032401_removeauditlogs")]
+    partial class removeauditlogs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,8 +1,11 @@
 using System.Net;
 using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Projects.Controllers.Base;
 using Projects.Controllers.Payload;
+using Projects.Features.Projects.CreateProject;
+using Projects.Features.Projects.GetAllProjects;
 using Projects.Services;
 
 namespace Projects.Controllers.Version1;
@@ -10,7 +13,7 @@ namespace Projects.Controllers.Version1;
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]/[action]")]
 [ApiController]
-public class ProjectController(IProjectService projectService) : BaseApiController
+public class ProjectController(IProjectService projectService, IMediator mediator) : BaseApiController
 {
     [HttpGet("{projectId:guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid projectId)
@@ -20,9 +23,9 @@ public class ProjectController(IProjectService projectService) : BaseApiControll
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetOptions()
     {
-        var response = await projectService.GetAll();
+        var response = await mediator.Send(new GetProjectOptionRequest());
 
         return OkResponse(response);
     }
@@ -40,9 +43,9 @@ public class ProjectController(IProjectService projectService) : BaseApiControll
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddProject([FromBody] AddProjectRequest request)
+    public async Task<IActionResult> AddProject([FromBody] CreateProjectRequest request)
     {
-        var response = await projectService.Add(request);
+        var response = await mediator.Send(request);
         return OkResponse(response, (int)HttpStatusCode.Created);
     }
 

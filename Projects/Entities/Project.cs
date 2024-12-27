@@ -13,4 +13,7 @@ public class Project : Entity
     public string Url { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+
+    public virtual ICollection<TaskEntity> TaskEntities { get; set; }
+    public virtual ICollection<Sprint> Sprints { get; set; }
 }

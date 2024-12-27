@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Projects.Context;
 using Projects.Controllers.Payload;
 using Projects.Entities;
@@ -19,12 +20,19 @@ public interface IProjectService
     Task<bool> Delete(Guid projectId);
 }
 
-public class ProjectService(ProjectContext context, IMapper mapper) : IProjectService
+public class ProjectService(ProjectContext context, ICacheService cacheService, IMapper mapper) : IProjectService
 {
     public async Task<List<ProjectModel>> GetAll()
     {
-        var projects = await context.Projects.AsNoTracking().ToListAsync();
-        return mapper.Map<List<Project>, List<ProjectModel>>(projects);
+        var cachedProjects = await cacheService.GetOrSetCacheAsync("get-all-projects", async () =>
+        {
+            var projects = await context.Projects.AsNoTracking().ToListAsync();
+            return mapper.Map<List<Project>, List<ProjectModel>>(projects);
+        });
+
+        var projects = cachedProjects ?? [];
+
+        return projects;
     }
 
     public async Task<(List<ProjectModel> projects, int count)> Get(string? keyword, int pageSize, int pageIndex)
@@ -62,6 +70,7 @@ public class ProjectService(ProjectContext context, IMapper mapper) : IProjectSe
         var project = mapper.Map<AddProjectRequest, Project>(request);
         context.Projects.Add(project);
         await context.SaveChangesAsync();
+        _ = Task.Run(() => cacheService.InvalidateCacheAsync("get-all-projects"));
         return mapper.Map<Project, ProjectModel>(project);
     }
 
@@ -72,6 +81,7 @@ public class ProjectService(ProjectContext context, IMapper mapper) : IProjectSe
         mapper.Map(request, project);
         context.Projects.Update(project);
         await context.SaveChangesAsync();
+        _ = Task.Run(() => cacheService.InvalidateCacheAsync("get-all-projects"));
         return mapper.Map<Project, ProjectModel>(project);
     }
 
@@ -81,6 +91,7 @@ public class ProjectService(ProjectContext context, IMapper mapper) : IProjectSe
                       ?? throw new EntityNotFoundException("Not found project");
         project.IsDeleted = true;
         context.Projects.Update(project);
+        _ = Task.Run(() => cacheService.InvalidateCacheAsync("get-all-projects"));
         return await context.SaveChangesAsync() != 0;
     }
 

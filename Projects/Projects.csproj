@@ -19,8 +19,17 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.0"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+        <PackageReference Include="StackExchange.Redis" Version="2.8.24"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+        <PackageReference Include="MediatR" Version="12.4.1"/>
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Features\Projects\" />
+        <Folder Include="Utils\"/>
     </ItemGroup>
 
 </Project>

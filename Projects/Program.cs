@@ -7,8 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddServices();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.AddMapper();
-
+builder.Services.AddRedisCache(builder.Configuration);
 #region Versioning
 
 builder.Services.AddApiVersioning(options =>
@@ -54,6 +55,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// app.Services.AutoApplyMigrations();
 
 // Use appropriate CORS policy based on environment
 if (app.Environment.IsDevelopment())
