@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Projects.Context;
 
@@ -11,9 +12,11 @@ using Projects.Context;
 namespace Projects.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    partial class ProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20241230073153_add-project-settings")]
+    partial class addprojectsettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,6 +79,40 @@ namespace Projects.Migrations
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("Projects.Entities.ProjectSetting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LatestUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("LatestUpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertyId");
+
+                    b.ToTable("ProjectSettings");
+                });
+
             modelBuilder.Entity("Projects.Entities.Property", b =>
                 {
                     b.Property<Guid>("Id")
@@ -121,43 +158,6 @@ namespace Projects.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Properties");
-                });
-
-            modelBuilder.Entity("Projects.Entities.PropertySetting", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsUsed")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LatestUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("LatestUpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PropertyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("PropertySettings");
                 });
 
             modelBuilder.Entity("Projects.Entities.PropertyValue", b =>
@@ -361,7 +361,7 @@ namespace Projects.Migrations
                     b.ToTable("TaskStatus");
                 });
 
-            modelBuilder.Entity("Projects.Entities.PropertySetting", b =>
+            modelBuilder.Entity("Projects.Entities.ProjectSetting", b =>
                 {
                     b.HasOne("Projects.Entities.Property", "Property")
                         .WithMany()

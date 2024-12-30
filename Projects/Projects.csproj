@@ -28,7 +28,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Features\Projects\" />
         <Folder Include="Utils\"/>
     </ItemGroup>
 

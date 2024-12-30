@@ -11,6 +11,7 @@ public class ProjectContext(DbContextOptions<ProjectContext> options,  IHttpCont
     public DbSet<Property> Properties { get; set; }
     public DbSet<PropertyValue> PropertyValues { get; set; }
     public DbSet<Sprint> Sprints { get; set; }
+    public DbSet<PropertySetting> PropertySettings { get; set; }
     public DbSet<TaskStatus> TaskStatus { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

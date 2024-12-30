@@ -6,11 +6,12 @@ using Projects.Context;
 using Projects.Entities;
 using Projects.Enums;
 using Projects.Models;
+using Projects.Models.Projects;
 using TaskStatus = Projects.Entities.TaskStatus;
 
 namespace Projects.Features.Projects.CreateProject;
 
-public class CreateProjectCommand(ProjectContext context, IMapper mapper)
+public class CreateProjectCommand(ProjectContext context, IMapper mapper, IServiceProvider serviceProvider)
     : IRequestHandler<CreateProjectRequest, ProjectModel>
 {
     public async Task<ProjectModel> Handle(CreateProjectRequest request, CancellationToken cancellationToken)
@@ -54,5 +55,11 @@ public class CreateProjectCommand(ProjectContext context, IMapper mapper)
         }).ToList();
 
         return statuses;
+    }
+
+    private async Task UpdatePropertyValues(Project project)
+    {
+        await using var scopedContext = serviceProvider.GetRequiredService<ProjectContext>();
+
     }
 }

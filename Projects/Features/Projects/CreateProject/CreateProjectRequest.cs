@@ -1,5 +1,6 @@
 using MediatR;
 using Projects.Models;
+using Projects.Models.Projects;
 
 namespace Projects.Features.Projects.CreateProject;
 

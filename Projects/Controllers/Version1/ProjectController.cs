@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Projects.Controllers.Base;
 using Projects.Controllers.Payload;
 using Projects.Features.Projects.CreateProject;
-using Projects.Features.Projects.GetAllProjects;
+using Projects.Features.Projects.GetProjectOptions;
+using Projects.Features.Projects.GetProjectsPaging;
 using Projects.Services;
 
 namespace Projects.Controllers.Version1;
@@ -31,9 +32,13 @@ public class ProjectController(IProjectService projectService, IMediator mediato
     }
 
     [HttpGet]
-    public async Task<IActionResult> Filter(string? keyword, int pageSize = 10, int pageIndex = 1)
+    public async Task<IActionResult> Filter(int pageSize = 10, int pageIndex = 1)
     {
-        var response = await projectService.Get(keyword, pageSize, pageIndex);
+        var response = await mediator.Send(new GetProjectsPaging
+        {
+            PageSize = pageSize,
+            PageIndex = pageIndex
+        });
 
         return OkResponse(new
         {

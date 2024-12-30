@@ -1,6 +1,6 @@
 using Projects.Enums;
 
-namespace Projects.Models;
+namespace Projects.Models.Projects;
 
 public class ProjectModel
 {
