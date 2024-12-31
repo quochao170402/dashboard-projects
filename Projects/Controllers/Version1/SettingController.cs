@@ -7,6 +7,7 @@ using Projects.Constants;
 using Projects.Controllers.Base;
 using Projects.Entities;
 using Projects.Enums;
+using Projects.Features.Settings.AddProjectProperty;
 using Projects.Features.Settings.GenerateProjectProperties;
 using Projects.Features.Settings.GetProjectSettings;
 using Projects.Features.Settings.GetProperties;
@@ -26,6 +27,14 @@ public class SettingController(IMediator mediator, IMapper mapper) : BaseApiCont
         var properties = await mediator.Send(new GetProjectSetting());
 
         return OkResponse(properties);
+    }
+
+    [HttpPost]
+    public async  Task<IActionResult> AddProjectSetting([FromBody] AddProjectProperty request)
+    {
+        var response = await mediator.Send(request);
+
+        return OkResponse(response);
     }
 
     [HttpPost]

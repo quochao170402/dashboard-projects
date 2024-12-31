@@ -28,4 +28,9 @@ public class Property : Entity
         PropertyType = PropertyType.Project;
         Datatype = datatype;
     }
+
+    public Property()
+    {
+
+    }
 }

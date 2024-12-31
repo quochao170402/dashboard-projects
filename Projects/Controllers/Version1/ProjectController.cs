@@ -32,7 +32,6 @@ public class ProjectController(IProjectService projectService, IMediator mediato
         return OkResponse(response);
     }
 
-    [Obsolete("Replace by Get")]
     [HttpGet]
     public async Task<IActionResult> Filter(int pageSize = 10, int pageIndex = 1)
     {

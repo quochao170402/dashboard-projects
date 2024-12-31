@@ -11,7 +11,6 @@ using Projects.Models.Projects;
 
 namespace Projects.Features.Projects.GetProjectsPaging;
 
-[Obsolete("Replace by filter project query")]
 public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serviceProvider)
     : IRequestHandler<GetProjectsPaging, (List<ProjectDetailModel> projects, int count)>
 {
@@ -110,20 +109,13 @@ public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serv
         using var scope = serviceProvider.CreateScope();
         await using var scopedContext = scope.ServiceProvider.GetRequiredService<ProjectContext>();
 
-        var defaultProperties = typeof(DefaultProjectProperties)
-            .GetFields(BindingFlags.Public | BindingFlags.Static)
-            .Where(x=> x.GetValue(null) != null)
-            .Select(x=>(Property)x.GetValue(null)!)
-            .Select(x=> new Property(x.Name, x.Datatype))
-            .ToList();
-
         // Fetch properties
         var properties =  await scopedContext.Properties
             .AsNoTracking()
             .Where(x => !x.IsDeleted && x.PropertyType == PropertyType.Project)
             .ToListAsync(cancellationToken);
 
-        return defaultProperties.Concat(properties).ToList();
+        return properties.ToList();
     }
 
     private async Task<List<PropertyValue>> GetPropertyValuesByProjectIds(IEnumerable<Guid> projectIds, CancellationToken cancellationToken)
