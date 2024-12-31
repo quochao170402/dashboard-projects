@@ -11,6 +11,7 @@ using Projects.Models.Projects;
 
 namespace Projects.Features.Projects.GetProjectsPaging;
 
+[Obsolete("Replace by filter project query")]
 public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serviceProvider)
     : IRequestHandler<GetProjectsPaging, (List<ProjectDetailModel> projects, int count)>
 {
