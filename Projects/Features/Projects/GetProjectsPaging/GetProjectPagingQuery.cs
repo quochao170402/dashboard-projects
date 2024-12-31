@@ -11,7 +11,7 @@ using Projects.Models.Projects;
 
 namespace Projects.Features.Projects.GetProjectsPaging;
 
-public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serviceProvider)
+public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serviceProvider,IHttpClientFactory factory)
     : IRequestHandler<GetProjectsPaging, (List<ProjectDetailModel> projects, int count)>
 {
 
@@ -32,6 +32,8 @@ public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serv
                 x => x.ToDictionary(y=>y.PropertyId));
 
         var result = new List<ProjectDetailModel>();
+
+        _ = Task.Run(() => doAsyncTask(cancellationToken), cancellationToken);
 
         foreach (var project in projects)
         {
@@ -128,5 +130,27 @@ public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serv
             .AsNoTracking()
             .Where(x => !x.IsDeleted && projectIds.Contains(x.EntityId))
             .ToListAsync(cancellationToken);
+    }
+
+    private async Task doAsyncTask(CancellationToken cancellationToken)
+    {
+        Console.WriteLine($"Start {DateTime.Now}");
+
+        var result = new List<ProjectDetailModel>();
+        var client = factory.CreateClient();
+
+        // Call an external API;
+
+        var response = await client.GetAsync("http://localhost:5208/weatherforecast", cancellationToken);
+
+
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Failed to retrieve data from the external API.");
+        }
+
+        var externalData = await response.Content.ReadAsStringAsync(cancellationToken);
+
+        Console.WriteLine(externalData+$" {DateTime.Now}");
     }
 }

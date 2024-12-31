@@ -5,11 +5,16 @@ using Projects.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient();
+
+
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddServices();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.AddMapper();
 builder.Services.AddRedisCache(builder.Configuration);
+builder.Services.AddDistributedTracing();
+
 #region Versioning
 
 builder.Services.AddApiVersioning(options =>
