@@ -11,7 +11,7 @@ using Projects.Models.Projects;
 
 namespace Projects.Features.Projects.GetProjectsPaging;
 
-public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serviceProvider,IHttpClientFactory factory)
+public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serviceProvider)
     : IRequestHandler<GetProjectsPaging, (List<ProjectDetailModel> projects, int count)>
 {
 
@@ -29,11 +29,9 @@ public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serv
         var valueMap = propertyValues.GroupBy(x => x.EntityId)
             .ToDictionary(
                 x => x.Key,
-                x => x.ToDictionary(y=>y.PropertyId));
+                x => x.ToDictionary(y => y.PropertyId));
 
         var result = new List<ProjectDetailModel>();
-
-        _ = Task.Run(() => doAsyncTask(cancellationToken), cancellationToken);
 
         foreach (var project in projects)
         {
@@ -42,7 +40,7 @@ public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serv
                 propertyValuesOfProject = new Dictionary<Guid, PropertyValue>();
             }
 
-            var values = properties.Where(x=> x.IsDefault).Select(x =>
+            var values = properties.Where(x => x.IsDefault).Select(x =>
             {
                 var propertyValue = string.Empty;
                 if (!propertyValuesOfProject.TryGetValue(x.Id, out var value))
@@ -93,10 +91,12 @@ public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serv
         await using var scopedContext = scope.ServiceProvider.GetRequiredService<ProjectContext>();
 
         // Query total count of projects
-        var count = await scopedContext.Projects.CountAsync(cancellationToken);
+        var count = await scopedContext.Projects.CountAsync(x => !x.IsDeleted, cancellationToken);
 
         // Fetch paginated projects
-        var projects = await scopedContext.Projects.OrderBy(x => x.CreatedAt)
+        var projects = await scopedContext.Projects
+            .Where(x => !x.IsDeleted)
+            .OrderBy(x => x.CreatedAt)
             .AsNoTracking()
             .Skip(request.PageSize * (request.PageIndex - 1))
             .Take(request.PageSize)
@@ -112,7 +112,7 @@ public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serv
         await using var scopedContext = scope.ServiceProvider.GetRequiredService<ProjectContext>();
 
         // Fetch properties
-        var properties =  await scopedContext.Properties
+        var properties = await scopedContext.Properties
             .AsNoTracking()
             .Where(x => !x.IsDeleted && x.PropertyType == PropertyType.Project)
             .ToListAsync(cancellationToken);
@@ -130,27 +130,5 @@ public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serv
             .AsNoTracking()
             .Where(x => !x.IsDeleted && projectIds.Contains(x.EntityId))
             .ToListAsync(cancellationToken);
-    }
-
-    private async Task doAsyncTask(CancellationToken cancellationToken)
-    {
-        Console.WriteLine($"Start {DateTime.Now}");
-
-        var result = new List<ProjectDetailModel>();
-        var client = factory.CreateClient();
-
-        // Call an external API;
-
-        var response = await client.GetAsync("http://localhost:5208/weatherforecast", cancellationToken);
-
-
-        if (!response.IsSuccessStatusCode)
-        {
-            Console.WriteLine("Failed to retrieve data from the external API.");
-        }
-
-        var externalData = await response.Content.ReadAsStringAsync(cancellationToken);
-
-        Console.WriteLine(externalData+$" {DateTime.Now}");
     }
 }

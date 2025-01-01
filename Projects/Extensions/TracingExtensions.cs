@@ -1,3 +1,4 @@
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -13,15 +14,14 @@ public static class TracingExtensions
             .WithTracing(tracing =>
             {
                 tracing
-                    .AddAspNetCoreInstrumentation()     // Trace HTTP requests
-                    .AddHttpClientInstrumentation()    // Trace outgoing HTTP calls
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
                     .AddEntityFrameworkCoreInstrumentation(options =>
                     {
-                        // Optionally, customize EF Core tracing
-                        options.SetDbStatementForText = true; // Includes SQL queries in traces
-                        options.SetDbStatementForStoredProcedure = true; // Includes stored procedure calls
+                        options.SetDbStatementForText = true;
+                        options.SetDbStatementForStoredProcedure = true;
                     })
-                    .AddConsoleExporter()              // Console exporter for debugging purposes
+                    .AddConsoleExporter()
                     .AddOtlpExporter()
                     .AddJaegerExporter();
             });
