@@ -21,6 +21,7 @@ public static class TracingExtensions
                         options.SetDbStatementForText = true;
                         options.SetDbStatementForStoredProcedure = true;
                     })
+                    .AddRedisInstrumentation()
                     .AddConsoleExporter()
                     .AddOtlpExporter()
                     .AddJaegerExporter();

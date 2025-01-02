@@ -8,10 +8,12 @@ using Projects.Controllers.Base;
 using Projects.Entities;
 using Projects.Enums;
 using Projects.Features.Settings.AddProjectProperty;
+using Projects.Features.Settings.AddProperty;
 using Projects.Features.Settings.GenerateProjectProperties;
 using Projects.Features.Settings.GetProjectSettings;
 using Projects.Features.Settings.GetProperties;
 using Projects.Features.Settings.UpdateProjectSetting;
+using Projects.Features.Settings.UpdateProperty;
 using Projects.Models.Properties;
 
 namespace Projects.Controllers.Version1;
@@ -45,16 +47,29 @@ public class SettingController(IMediator mediator, IMapper mapper) : BaseApiCont
         return OkResponse(properties);
     }
 
-    // [HttpGet]
-    // public async  Task<IActionResult> GetProjectPropertiesByProjectIds([FromBody] )
-    // {
-    //     var properties = await mediator.Send(new GetProperties());
-    //
-    //     if (properties.Count == 0)
-    //     {
-    //         properties = await mediator.Send(new GenerateProjectProperties());
-    //     }
-    //
-    //     return OkResponse(properties);
-    // }
+    [HttpPost]
+    public async  Task<IActionResult> AddProperty([FromBody] AddPropertyRequest request)
+    {
+        var properties = await mediator.Send(request);
+
+        return OkResponse(properties);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async  Task<IActionResult> UpdateProperty([FromRoute] Guid id, [FromBody] AddPropertyRequest request)
+    {
+        var properties = await mediator.Send(new UpdatePropertyRequest
+        {
+            Name = request.Name,
+            Label = request.Label,
+            Datatype = request.Datatype,
+            Note = request.Note,
+            PropertyType = request.PropertyType,
+            IsDefault = request.IsDefault,
+            IsUsed = request.IsUsed,
+            Id = id
+        });
+
+        return OkResponse(properties);
+    }
 }

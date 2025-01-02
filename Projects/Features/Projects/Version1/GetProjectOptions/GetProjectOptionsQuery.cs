@@ -4,7 +4,7 @@ using Projects.Common;
 using Projects.Context;
 using Projects.Services;
 
-namespace Projects.Features.Projects.GetProjectOptions;
+namespace Projects.Features.Projects.Version1.GetProjectOptions;
 
 public class GetProjectOptionsQuery(ProjectContext context, ICacheService cacheService)
     : IRequestHandler<GetProjectOptionRequest, List<OptionModel>>

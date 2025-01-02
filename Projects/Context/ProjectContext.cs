@@ -24,7 +24,6 @@ public class ProjectContext(DbContextOptions<ProjectContext> options,  IHttpCont
             .WithMany()  // TaskStatus can be used by many tasks (no reverse navigation)
             .HasForeignKey(t => t.TaskStatusId)
             .OnDelete(DeleteBehavior.Restrict);  // Prevent TaskStatus deletion if Tasks exist
-
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())

@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Microsoft.OpenApi.Models;
 using Projects.Extensions;
+using Projects.Filters;
 using Projects.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +42,8 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Project API V1", Version = "v1.0" });
     c.SwaggerDoc("v2", new OpenApiInfo { Title = "Project API V1", Version = "v2.0" });
+    c.OperationFilter<SwaggerOperationFilter>();
+
 });
 builder.Services.AddCors(options =>
 {
@@ -67,8 +70,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseCors("DevelopmentPolicy");
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Project API v1");
+        c.SwaggerEndpoint("/swagger/v2/swagger.json", "Project API v2");
+    });    app.UseCors("DevelopmentPolicy");
 }
 else
 {
@@ -78,9 +84,9 @@ else
 // Add security headers
 app.Use(async (context, next) =>
 {
-    context.Response.Headers.Add("X-Frame-Options", "DENY");
-    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-    context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+    context.Response.Headers.Append("X-Frame-Options", "DENY");
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
     await next();
 });
 

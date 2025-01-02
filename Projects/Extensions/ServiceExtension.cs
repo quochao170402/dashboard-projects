@@ -1,6 +1,6 @@
 using System.Reflection;
 using MediatR;
-using Projects.Features.Projects.CreateProject;
+using Projects.Features.Projects.Version1.CreateProject;
 using Projects.Services;
 
 namespace Projects.Extensions;

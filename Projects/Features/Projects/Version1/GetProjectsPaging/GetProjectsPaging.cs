@@ -1,8 +1,7 @@
 using MediatR;
-using Projects.Models;
 using Projects.Models.Projects;
 
-namespace Projects.Features.Projects.GetProjectsPaging;
+namespace Projects.Features.Projects.Version1.GetProjectsPaging;
 
 public class GetProjectsPaging : IRequest<(List<ProjectDetailModel> projects, int count)>
 {

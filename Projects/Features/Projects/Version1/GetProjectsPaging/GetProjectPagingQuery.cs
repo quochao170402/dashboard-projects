@@ -1,15 +1,11 @@
-using System.Reflection;
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Projects.Constants;
 using Projects.Context;
 using Projects.Entities;
 using Projects.Enums;
-using Projects.Models;
 using Projects.Models.Projects;
 
-namespace Projects.Features.Projects.GetProjectsPaging;
+namespace Projects.Features.Projects.Version1.GetProjectsPaging;
 
 public class GetProjectPagingQuery(ProjectContext context, IServiceProvider serviceProvider)
     : IRequestHandler<GetProjectsPaging, (List<ProjectDetailModel> projects, int count)>

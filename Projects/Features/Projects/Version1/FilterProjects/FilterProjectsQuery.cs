@@ -5,7 +5,7 @@ using Projects.Context;
 using Projects.Entities;
 using Projects.Models.Projects;
 
-namespace Projects.Features.Projects.FilterProjects;
+namespace Projects.Features.Projects.Version1.FilterProjects;
 
 public class FilterProjectsQuery(ProjectContext context, IMapper mapper)
     : IRequestHandler<FilterProjects, (List<ProjectModel> projects, int count)>

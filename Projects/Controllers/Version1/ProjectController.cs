@@ -4,10 +4,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Projects.Controllers.Base;
 using Projects.Controllers.Payload;
-using Projects.Features.Projects.CreateProject;
-using Projects.Features.Projects.FilterProjects;
-using Projects.Features.Projects.GetProjectOptions;
-using Projects.Features.Projects.GetProjectsPaging;
+using Projects.Features.Projects.Version1.CreateProject;
+using Projects.Features.Projects.Version1.FilterProjects;
+using Projects.Features.Projects.Version1.GetProjectOptions;
+using Projects.Features.Projects.Version1.GetProjectsPaging;
 using Projects.Services;
 
 namespace Projects.Controllers.Version1;

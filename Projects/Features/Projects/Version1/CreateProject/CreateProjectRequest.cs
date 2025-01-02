@@ -1,8 +1,7 @@
 using MediatR;
-using Projects.Models;
 using Projects.Models.Projects;
 
-namespace Projects.Features.Projects.CreateProject;
+namespace Projects.Features.Projects.Version1.CreateProject;
 
 public class CreateProjectRequest : IRequest<ProjectModel>
 {
