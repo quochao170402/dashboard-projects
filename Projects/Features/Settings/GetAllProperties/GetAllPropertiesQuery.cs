@@ -1,29 +1,31 @@
 using System.Reflection;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Projects.Constants;
 using Projects.Context;
 using Projects.Entities;
-using Projects.Enums;
 using Projects.Models.Settings;
 
-namespace Projects.Features.Settings.GetProjectSettings;
+namespace Projects.Features.Settings.GetAllProperties;
 
-public class GetProjectSettingQuery(ProjectContext context) : IRequestHandler<GetProjectSetting, List<ProjectSettingModel>>
+public class GetAllPropertiesQuery(ProjectContext context, IMapper mapper)
+    : IRequestHandler<GetAllProperties, List<ProjectSettingModel>>
 {
-    public async Task<List<ProjectSettingModel>> Handle(GetProjectSetting request, CancellationToken cancellationToken)
+    public async Task<List<ProjectSettingModel>> Handle(GetAllProperties request, CancellationToken cancellationToken)
     {
         var properties = await context.Properties
             .AsNoTracking()
-            .Where(x => !x.IsDeleted && x.PropertyType == PropertyType.Project)
+            .Where(x => !x.IsDeleted && x.PropertyType == request.Type)
             .ToListAsync(cancellationToken);
 
         if (properties.Count == 0)
         {
             properties = typeof(DefaultProjectProperties)
                 .GetFields(BindingFlags.Public | BindingFlags.Static)
-                .Where(x=> x.GetValue(null) != null)
-                .Select(x=>(Property)x.GetValue(null)!)
+                .Where(x => x.GetValue(null) != null)
+                .Select(x => (Property)x.GetValue(null)!)
                 .ToList();
 
             context.Properties.AddRange(properties);
@@ -51,7 +53,8 @@ public class GetProjectSettingQuery(ProjectContext context) : IRequestHandler<Ge
                 Datatype = x.Datatype,
                 Note = x.Note,
                 IsDefault = x.IsDefault,
-                IsUsed = isFound && setting!.IsUsed
+                IsUsed = isFound && setting!.IsUsed,
+                Options = JsonConvert.DeserializeObject<List<string>>(x.Options ) ?? []
             };
         }).ToList();
     }

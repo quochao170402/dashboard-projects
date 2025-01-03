@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Projects.Context;
 using Projects.Entities;
 using Projects.Exceptions;
@@ -25,6 +26,7 @@ public class UpdatePropertyCommand(ProjectContext context) : IRequestHandler<Upd
         existing.Note = request.Note;
         existing.PropertyType = request.PropertyType;
         existing.IsDefault = request.IsDefault;
+        existing.Options = JsonConvert.SerializeObject(request.Options);
 
         var setting = await context.PropertySettings
             .FirstOrDefaultAsync(x => !x.IsDeleted && x.PropertyId == existing.Id,

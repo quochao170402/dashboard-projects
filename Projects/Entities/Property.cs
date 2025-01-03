@@ -13,6 +13,9 @@ public class Property : Entity
     public string Note { get; set; } = string.Empty;
     public PropertyType PropertyType { get; set; }
     public bool IsDefault { get; set; } = false;
+
+    public string Options { get; set; } = string.Empty;
+
     public virtual ICollection<PropertyValue> PropertyValues { get; set; }
 
     /// <summary>

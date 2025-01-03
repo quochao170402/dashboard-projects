@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Projects.Context;
 using Projects.Entities;
 using Projects.Enums;
@@ -23,6 +24,7 @@ public class AddPropertyCommand(ProjectContext context) : IRequestHandler<AddPro
             Note = request.Note,
             PropertyType = request.PropertyType,
             IsDefault = request.IsDefault,
+            Options = JsonConvert.SerializeObject(request.Options)
         };
 
         var projectSetting = new PropertySetting()

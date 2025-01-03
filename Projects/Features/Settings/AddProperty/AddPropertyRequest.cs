@@ -12,4 +12,6 @@ public class AddPropertyRequest : IRequest<bool>
     public PropertyType PropertyType { get; set; }
     public bool IsDefault { get; set; } = false;
     public bool IsUsed { get; set; }
+    public List<string> Options { get; set; } = [];
+
 }

@@ -11,4 +11,5 @@ public class ProjectSettingModel
     public string Note { get; set; } = string.Empty;
     public bool IsDefault { get; set; } = false;
     public bool IsUsed { get; set; }
+    public List<string> Options { get; set; } = [];
 }
