@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Projects.Context;
 using Projects.Entities;
-using Projects.Enums;
 
 namespace Projects.Features.Settings.AddProperty;
 
@@ -24,17 +23,11 @@ public class AddPropertyCommand(ProjectContext context) : IRequestHandler<AddPro
             Note = request.Note,
             PropertyType = request.PropertyType,
             IsDefault = request.IsDefault,
-            Options = JsonConvert.SerializeObject(request.Options)
-        };
-
-        var projectSetting = new PropertySetting()
-        {
-            Property = property,
-            IsUsed = request.IsUsed
+            Options = JsonConvert.SerializeObject(request.Options),
+            IsUsed = request.IsUsed,
         };
 
         context.Properties.Add(property);
-        context.PropertySettings.Add(projectSetting);
         return await context.SaveChangesAsync(cancellationToken) > 0;
     }
 

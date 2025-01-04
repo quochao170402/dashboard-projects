@@ -40,29 +40,16 @@ public class GetPropertiesQuery(ProjectContext context)
             await context.SaveChangesAsync(cancellationToken);
         }
 
-        var propertyIds = properties.Select(x => x.Id);
-
-        var projectSettings = await context.PropertySettings
-            .AsNoTracking()
-            .Where(x => !x.IsDeleted && propertyIds.Any(y => y == x.PropertyId))
-            .ToListAsync(cancellationToken);
-
-        var settingMap = projectSettings.ToDictionary(x => x.PropertyId);
-
-        return (properties: properties.Select(x =>
+        return (properties: properties.Select(x => new ProjectSettingModel
         {
-            var isFound = settingMap.TryGetValue(x.Id, out var setting);
-            return new ProjectSettingModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Label = x.Label,
-                Datatype = x.Datatype,
-                Note = x.Note,
-                IsDefault = x.IsDefault,
-                IsUsed = isFound && setting!.IsUsed,
-                Options = JsonConvert.DeserializeObject<List<string>>(x.Options ) ?? []
-            };
+            Id = x.Id,
+            Name = x.Name,
+            Label = x.Label,
+            Datatype = x.Datatype,
+            Note = x.Note,
+            IsDefault = x.IsDefault,
+            IsUsed = x.IsUsed,
+            Options = JsonConvert.DeserializeObject<List<string>>(x.Options ) ?? []
         }).ToList(), count);
     }
 }

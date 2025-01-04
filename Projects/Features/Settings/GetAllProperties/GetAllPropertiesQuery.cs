@@ -20,32 +20,8 @@ public class GetAllPropertiesQuery(ProjectContext context, IMapper mapper)
             .Where(x => !x.IsDeleted && x.PropertyType == request.Type)
             .ToListAsync(cancellationToken);
 
-        if (properties.Count == 0)
-        {
-            properties = typeof(DefaultProjectProperties)
-                .GetFields(BindingFlags.Public | BindingFlags.Static)
-                .Where(x => x.GetValue(null) != null)
-                .Select(x => (Property)x.GetValue(null)!)
-                .ToList();
-
-            context.Properties.AddRange(properties);
-
-            await context.SaveChangesAsync(cancellationToken);
-        }
-
-        var propertyIds = properties.Select(x => x.Id);
-
-        var projectSettings = await context.PropertySettings
-            .AsNoTracking()
-            .Where(x => !x.IsDeleted && propertyIds.Any(y => y == x.PropertyId))
-            .ToListAsync(cancellationToken);
-
-        var settingMap = projectSettings.ToDictionary(x => x.PropertyId);
-
-        return properties.Select(x =>
-        {
-            var isFound = settingMap.TryGetValue(x.Id, out var setting);
-            return new ProjectSettingModel
+        if (properties.Count != 0)
+            return properties.Select(x => new ProjectSettingModel
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -53,9 +29,31 @@ public class GetAllPropertiesQuery(ProjectContext context, IMapper mapper)
                 Datatype = x.Datatype,
                 Note = x.Note,
                 IsDefault = x.IsDefault,
-                IsUsed = isFound && setting!.IsUsed,
-                Options = JsonConvert.DeserializeObject<List<string>>(x.Options ) ?? []
-            };
+                IsUsed = x.IsUsed,
+                Options = JsonConvert.DeserializeObject<List<string>>(x.Options) ?? []
+            }).ToList();
+
+        properties = typeof(DefaultProjectProperties)
+            .GetFields(BindingFlags.Public | BindingFlags.Static)
+            .Where(x => x.GetValue(null) != null)
+            .Select(x => (Property)x.GetValue(null)!)
+            .ToList();
+
+        context.Properties.AddRange(properties);
+
+        await context.SaveChangesAsync(cancellationToken);
+
+
+        return properties.Select(x => new ProjectSettingModel
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Label = x.Label,
+            Datatype = x.Datatype,
+            Note = x.Note,
+            IsDefault = x.IsDefault,
+            IsUsed = x.IsUsed,
+            Options = JsonConvert.DeserializeObject<List<string>>(x.Options) ?? []
         }).ToList();
     }
 }

@@ -1,20 +1,13 @@
-using System.Reflection;
 using Asp.Versioning;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Projects.Constants;
 using Projects.Controllers.Base;
-using Projects.Entities;
 using Projects.Enums;
-using Projects.Features.Settings.AddProjectProperty;
 using Projects.Features.Settings.AddProperty;
-using Projects.Features.Settings.GenerateProjectProperties;
 using Projects.Features.Settings.GetAllProperties;
-using Projects.Features.Settings.GetProjectSettings;
-using Projects.Features.Settings.UpdateProjectSetting;
 using Projects.Features.Settings.UpdateProperty;
-using Projects.Models.Properties;
+using Projects.Features.Settings.UpdateSetting;
 using GetProperties = Projects.Features.Settings.GetProjectSettings.GetProperties;
 
 namespace Projects.Controllers.Version1;
@@ -46,16 +39,8 @@ public class SettingController(IMediator mediator, IMapper mapper) : BaseApiCont
         });
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddProjectSetting([FromBody] AddProjectProperty request)
-    {
-        var response = await mediator.Send(request);
-
-        return OkResponse(response);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> UpdateProjectSetting([FromBody] UpdateProjectSettingRequest request)
+    [HttpPut]
+    public async Task<IActionResult> UpdateSetting([FromBody] UpdateSettingRequest request)
     {
         var properties = await mediator.Send(request);
 
@@ -82,7 +67,8 @@ public class SettingController(IMediator mediator, IMapper mapper) : BaseApiCont
             PropertyType = request.PropertyType,
             IsDefault = request.IsDefault,
             IsUsed = request.IsUsed,
-            Id = id
+            Id = id,
+            Options = request.Options
         });
 
         return OkResponse(properties);

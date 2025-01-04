@@ -27,25 +27,7 @@ public class UpdatePropertyCommand(ProjectContext context) : IRequestHandler<Upd
         existing.PropertyType = request.PropertyType;
         existing.IsDefault = request.IsDefault;
         existing.Options = JsonConvert.SerializeObject(request.Options);
-
-        var setting = await context.PropertySettings
-            .FirstOrDefaultAsync(x => !x.IsDeleted && x.PropertyId == existing.Id,
-                cancellationToken);
-
-        if (setting is not null)
-        {
-            setting.IsUsed = request.IsUsed;
-            context.PropertySettings.Update(setting);
-        }
-        else
-        {
-            var projectSetting = new PropertySetting()
-            {
-                Property = existing,
-                IsUsed = request.IsUsed
-            };
-            context.PropertySettings.Add(projectSetting);
-        }
+        existing.IsUsed = request.IsUsed;
 
         context.Properties.Update(existing);
         return await context.SaveChangesAsync(cancellationToken) > 0;
