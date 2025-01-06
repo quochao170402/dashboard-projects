@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Projects.Controllers.Base;
 using Projects.Enums;
 using Projects.Features.Settings.AddProperty;
+using Projects.Features.Settings.DeleteProperty;
 using Projects.Features.Settings.GetAllProperties;
 using Projects.Features.Settings.UpdateProperty;
 using Projects.Features.Settings.UpdatePropertySetting;
@@ -48,6 +49,14 @@ public class SettingController(IMediator mediator, IMapper mapper) : BaseApiCont
         return OkResponse(properties);
     }
 
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteProperty([FromRoute] Guid id)
+    {
+        var response = await mediator.Send(new DeletePropertyRequest(id));
+
+        return OkResponse(response);
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddProperty([FromBody] AddPropertyRequest request)
     {
@@ -82,5 +91,6 @@ public class SettingController(IMediator mediator, IMapper mapper) : BaseApiCont
 
         return OkResponse(response);
     }
+
 
 }
