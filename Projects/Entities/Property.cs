@@ -23,10 +23,10 @@ public class Property : Entity
     /// </summary>
     /// <param name="name"></param>
     /// <param name="datatype"></param>
-    public Property(string name, Datatype datatype)
+    public Property(string name, string label, Datatype datatype)
     {
         Name = name;
-        Label = name;
+        Label = label;
         IsDefault = true;
         PropertyType = PropertyType.Project;
         Datatype = datatype;

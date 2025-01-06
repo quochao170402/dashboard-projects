@@ -7,6 +7,7 @@ using Projects.Enums;
 using Projects.Features.Settings.AddProperty;
 using Projects.Features.Settings.GetAllProperties;
 using Projects.Features.Settings.UpdateProperty;
+using Projects.Features.Settings.UpdatePropertySetting;
 using Projects.Features.Settings.UpdateSetting;
 using GetProperties = Projects.Features.Settings.GetProjectSettings.GetProperties;
 
@@ -73,4 +74,13 @@ public class SettingController(IMediator mediator, IMapper mapper) : BaseApiCont
 
         return OkResponse(properties);
     }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdatePropertySetting([FromBody] UpdatePropertySettingRequest request)
+    {
+        var response = await mediator.Send(request);
+
+        return OkResponse(response);
+    }
+
 }
